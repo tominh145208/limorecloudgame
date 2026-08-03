@@ -1604,7 +1604,7 @@ async function requestNotificationPermission() {
         if (permission === 'granted') {
             showSampleNotification('CloudZone đã bật thông báo', {
                 body: 'Bạn sẽ nhận được cập nhật và ưu đãi trực tiếp từ ứng dụng.',
-                icon: 'https://i.imgur.com/wfJugJr.png'
+                icon: '/assets/logo.png'
             });
         }
     } catch (error) {
@@ -1614,8 +1614,9 @@ async function requestNotificationPermission() {
 
 function showSampleNotification(title, options = {}) {
     if (!isNotificationSupported() || Notification.permission !== 'granted') return;
+    const safeOptions = { icon: '/assets/logo.png', ...options };
     try {
-        new Notification(title, options);
+        new Notification(title, safeOptions);
     } catch (error) {
         console.warn('Hiển thị thông báo thất bại:', error);
     }
@@ -1694,7 +1695,7 @@ async function pollAdminNotificationsOnce() {
         const newest = notifs[0];
         if (newest && newest.time && newest.time !== lastSeen) {
             if (Notification && Notification.permission === 'granted') {
-                showSampleNotification(newest.title, { body: newest.body || '', icon: 'https://i.imgur.com/wfJugJr.png' });
+                showSampleNotification(newest.title, { body: newest.body || '', icon: '/assets/logo.png' });
             }
             localStorage.setItem('adminLastNotifTime', newest.time);
         }
@@ -1736,7 +1737,7 @@ async function pollGlobalNotificationsOnce() {
         const newest = notifs[0];
         if (newest && newest.time && newest.time !== lastSeen) {
             if (Notification && Notification.permission === 'granted') {
-                showSampleNotification(newest.title, { body: newest.body || '', icon: 'https://i.imgur.com/wfJugJr.png' });
+                showSampleNotification(newest.title, { body: newest.body || '', icon: '/assets/logo.png' });
             } else {
                 // show in-app toast if permission not granted
                 showInAppToast(newest.title + (newest.body ? (': ' + newest.body) : ''));
@@ -1951,7 +1952,7 @@ function selectPackage(id, priceStr, pkgName) {
     }
 }
 
-const QR_DATA_URI = 'https://i.imgur.com/t88KJTx.png';
+const QR_DATA_URI = '/assets/logo.png';
 
 function ensureQRModal() {
     let modal = document.getElementById('qr-modal');

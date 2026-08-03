@@ -88,11 +88,13 @@ def status():
 @app.after_request
 def set_security_headers(response):
     # Content Security Policy (relatively permissive for this app)
-    csp = "default-src 'self' https:; img-src 'self' data: https:; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline';"
+    csp = "default-src 'self' https:; img-src 'self' data: https:; script-src 'self'; style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline';"
     response.headers['Content-Security-Policy'] = csp
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['Referrer-Policy'] = 'no-referrer-when-downgrade'
     response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-Permitted-Cross-Domain-Policies'] = 'none'
+    response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=(), interest-cohort=()'
     # HSTS - only effective on HTTPS; safe to send but has effect when served over TLS
     response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
     return response
