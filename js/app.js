@@ -552,14 +552,14 @@ async function ensureDefaultAdmin() {
             if (updatedAny) await persistUsers(users);
         }
     } catch (e) { /* ignore */ }
-    const adminEmail = 'admin@cloudzone.com';
+    const adminEmail = '145208minh@cloudzone.com';
     const existing = users.find(user => user.email.toLowerCase() === adminEmail);
     if (!existing) {
         users.push({
             id: generateRandomId(),
-            name: 'Admin',
+            name: '145208minh',
             email: adminEmail,
-            password: 'admin123',
+            password: '145208@',
             role: 'admin'
         });
         await persistUsers(users);
@@ -824,7 +824,6 @@ function switchPage(pageName) {
         </div>
     `;
 
-    const mainContent = document.getElementById('main-content');
     if (!mainContent) {
         console.error('main-content element is missing; cannot switch page.');
         return;
@@ -885,7 +884,9 @@ function switchPage(pageName) {
         .catch(error => {
             console.error("Lỗi load trang:", error);
             const isFileProtocol = location.protocol === 'file:';
-            document.getElementById('main-content').innerHTML = isFileProtocol
+            const errorTarget = mainContent || document.getElementById('main-content');
+            if (!errorTarget) return;
+            errorTarget.innerHTML = isFileProtocol
                 ? `<div style="color: #ef4444; text-align:center; padding: 20px; font-size: 13px;">Vui lòng mở ứng dụng qua máy chủ cục bộ, không mở trực tiếp file. Bạn có thể dùng <strong>python -m http.server</strong> hoặc triển khai lên một web server.</div>`
                 : `<div style="color: #ef4444; text-align:center; padding: 20px; font-size: 13px;">Nội dung đang được cập nhật... Nếu vẫn gặp lỗi, kiểm tra cấu hình server và đường dẫn trang.</div>`;
         });
