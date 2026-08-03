@@ -731,7 +731,7 @@ async function createAccountPage() {
     };
     users.push(newUser);
     await persistUsers(users);
-    try { await createServerNotification('New registration', `${name} (${email}) vừa đăng ký tài khoản.`); } catch(e) { /* ignore */ }
+    try { await createServerNotification('New registration', `${name} (${email}) vừa đăng ký tài khoản.`, 'admin'); } catch(e) { /* ignore */ }
     setLoggedInSession(newUser);
     showAlert('auth-alert-register', 'Đăng ký thành công! Bạn đã được đăng nhập.', 'success');
     setTimeout(() => {
@@ -1648,10 +1648,16 @@ function setupNotificationModal() {
 }
 
 // --- Admin notifications: server-backed, polled by admin client ---
-async function createServerNotification(title, body) {
+async function createServerNotification(title, body, scope = 'public') {
     if (!supportsRemoteUsers()) return;
     try {
-        const payload = { id: generateRandomId(), title, body, time: new Date().toISOString() };
+        const payload = {
+            id: generateRandomId(),
+            title,
+            body,
+            scope,
+            time: new Date().toISOString()
+        };
         await apiPost('/notifications', payload);
     } catch (error) {
         console.warn('Failed to create server notification:', error);
@@ -1739,9 +1745,11 @@ let _globalNotifPoll = null;
 async function pollGlobalNotificationsOnce() {
     const notifs = await fetchServerNotifications();
     if (!notifs || notifs.length === 0) return;
+    const publicNotifs = notifs.filter(n => n.scope !== 'admin');
+    if (publicNotifs.length === 0) return;
     try {
         const lastSeen = localStorage.getItem('lastNotifTime') || '';
-        const newest = notifs[0];
+        const newest = publicNotifs[0];
         if (newest && newest.time && newest.time !== lastSeen) {
             if (Notification && Notification.permission === 'granted') {
                 showSampleNotification(newest.title, { body: newest.body || '', icon: '/assets/logo.png' });
@@ -1803,7 +1811,7 @@ function setupAdminSendUI() {
         const title = titleInput?.value?.trim();
         const body = bodyInput?.value?.trim();
         if (!title) { alert('Vui lòng nhập tiêu đề.'); return; }
-        await createServerNotification(title, body);
+        await createServerNotification(title, body, 'public');
         modal.style.display = 'none';
         titleInput.value = '';
         bodyInput.value = '';
