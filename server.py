@@ -88,7 +88,7 @@ def status():
 @app.after_request
 def set_security_headers(response):
     # Content Security Policy (relatively permissive for this app)
-    csp = "default-src 'self' https:; img-src 'self' data: https:; script-src 'self'; style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline';"
+    csp = "default-src 'self' https:; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline';"
     response.headers['Content-Security-Policy'] = csp
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['Referrer-Policy'] = 'no-referrer-when-downgrade'
