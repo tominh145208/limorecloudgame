@@ -824,8 +824,14 @@ function switchPage(pageName) {
         </div>
     `;
 
+    const mainContent = document.getElementById('main-content');
+    if (!mainContent) {
+        console.error('main-content element is missing; cannot switch page.');
+        return;
+    }
+
     if (pageCache[pageName]) {
-        document.getElementById('main-content').innerHTML = pageCache[pageName];
+        mainContent.innerHTML = pageCache[pageName];
         if (pageName === 'games' || pageName === 'home') {
             initGameInterface();
         } else if (pageName === 'area') {
@@ -847,7 +853,7 @@ function switchPage(pageName) {
         return;
     }
 
-    document.getElementById('main-content').innerHTML = loadingHtml;
+    mainContent.innerHTML = loadingHtml;
 
     fetch(pageUrl)
         .then(response => {
@@ -856,7 +862,7 @@ function switchPage(pageName) {
         })
         .then(html => {
             pageCache[pageName] = html;
-            document.getElementById('main-content').innerHTML = html;
+            mainContent.innerHTML = html;
             if (pageName === 'games' || pageName === 'home') {
                 initGameInterface();
             } else if (pageName === 'area') {
