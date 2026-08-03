@@ -1609,7 +1609,7 @@ async function requestNotificationPermission() {
     try {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
-            showSampleNotification('CloudZone đã bật thông báo', {
+            showSampleNotification('LimoreCloudGame đã bật thông báo', {
                 body: 'Bạn sẽ nhận được cập nhật và ưu đãi trực tiếp từ ứng dụng.',
                 icon: '/assets/logo.png'
             });
@@ -1959,7 +1959,7 @@ function selectPackage(id, priceStr, pkgName) {
     }
 }
 
-const QR_DATA_URI = '/assets/logo.png';
+const QR_DATA_URI = 'https://i.imgur.com/iYuDQ8R.png';
 
 function ensureQRModal() {
     let modal = document.getElementById('qr-modal');
